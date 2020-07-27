@@ -7,26 +7,20 @@ StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-PIDFile=/var/run/karma.pid
-User={{ karma_system_user }}
-Group={{ karma_system_group }}
+PIDFile=/var/run/prometheus_net_discovery.pid
+User={{ prometheus_net_discovery_system_user }}
+Group={{ prometheus_net_discovery_system_group }}
 PermissionsStartOnly=true
 EnvironmentFile=/etc/default/prometheus-net-discovery
-ExecReload=/bin/kill -HUP $MAINPID
 ExecStart=/usr/local/bin/prometheus-net-discovery
+ExecStartPre=-/bin/mkdir {{ prometheus_net_discovery_filesdpath }}
+ExecStartPre=-/bin/chown {{ prometheus_net_discovery_system_user }} {{ prometheus_net_discovery_filesdpath }}
+ExecStartPre=-/bin/chmod 755 {{ prometheus_net_discovery_filesdpath }}
 
-SyslogIdentifier=karma
+SyslogIdentifier=prometheus-net-discovery
 KillMode=process
 Restart=always
 RestartSec=5
-
-LockPersonality=true
-NoNewPrivileges=true
-MemoryDenyWriteExecute=true
-PrivateTmp=true
-ProtectHome=true
-RemoveIPC=true
-RestrictSUIDSGID=true
 
 [Install]
 WantedBy=multi-user.target

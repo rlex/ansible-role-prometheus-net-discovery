@@ -1,3 +1,3 @@
-CONFIG_NETWORKS={{ prometheus_net_discovery_networks }}
-CONFIG_INTERVAL={{ prometheus_net_discovery_interval }}
-CONFIG_FILESDPATH={{ prometheus_net_discovery_filesdpath }}
+CONFIG_NETWORKS="{{ prometheus_net_discovery_networks | join(",") }}"
+CONFIG_INTERVAL="{{ prometheus_net_discovery_interval }}"
+CONFIG_FILESDPATH="{{ prometheus_net_discovery_filesdpath }}"
