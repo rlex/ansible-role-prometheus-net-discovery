@@ -1,0 +1,5 @@
+- name: restart prometheus-net-discovery
+  systemd:
+    daemon_reload: true
+    name: prometheus-net-discovery
+    state: restarted

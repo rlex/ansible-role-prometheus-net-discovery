@@ -1,0 +1,6 @@
+prometheus_net_discovery_version: 1.1.0
+prometheus_net_discovery_system_user: prom-net-d
+prometheus_net_discovery_system_group: prom-net-d
+prometheus_net_discovery_filesdpath: /tmp/prometheus_file_sd/
+prometheus_net_discovery_interval: 60m
+prometheus_net_discovery_networks: ""

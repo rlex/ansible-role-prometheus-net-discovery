@@ -1,0 +1,50 @@
+- name: create prometheus-net-discovery system group
+  group:
+    name: "{{ prometheus_net_discovery_system_group }}"
+    system: true
+    state: present
+
+- name: create prometheus-net-discovery system user
+  user:
+    name: "{{ prometheus_net_discovery_system_user }}"
+    system: true
+    shell: "/usr/sbin/nologin"
+    group: "{{ prometheus_net_discovery_system_group }}"
+    createhome: false
+
+- name: "Download prometheus-net-discovery files"
+  become: false
+  get_url:
+    url: "https://github.com/FortnoxAB/prometheus-net-discovery/releases/download/v{{ prometheus_net_discovery_version }}/prometheus-net-discovery-linux-amd64"
+    dest: "/tmp/prometheus-net-discovery-{{ prometheus_net_discovery_version }}-linux-amd64"
+  delegate_to: localhost
+
+- name: propagate prometheus-net-discovery binary
+  copy:
+    src: "/tmp/prometheus-net-discovery-{{ prometheus_net_discovery_version }}-linux-amd64"
+    dest: "/usr/local/bin/prometheus-net-discovery"
+    mode: 0755
+    owner: "{{ prometheus_net_discovery_system_user }}"
+    group: "{{ prometheus_net_discovery_system_group }}"
+  notify:
+    - restart prometheus-net-discovery
+
+- name: create config
+  template:
+    src: prometheus-net-discovery.j2
+    dest: /etc/default/prometheus-net-discovery
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart prometheus-net-discovery
+
+- name: create systemd service unit
+  template:
+    src: prometheus-net-discovery.service.j2
+    dest: /etc/systemd/system/prometheus-net-discovery.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart prometheus-net-discovery
